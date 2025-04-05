@@ -122,7 +122,7 @@ except:
     )
     val_data_asset = workspace_ml_client.data.create_or_update(val_data)
 ```
-3. You can verify the existence of these datasets in the *Datasets* section of the Azure ML studio:
+3. You can verify the existence of these datasets in the *Data Assets* section of the Azure ML studio:
 ![Step3_Datasets](images/Step3_Datasets.png)
 
 ## Step 4: Fine-tuning Model
