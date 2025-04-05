@@ -167,3 +167,39 @@ while True:
         print("Job run is in progress. Checking again in 30 seconds..")
         time.sleep(30)
 ```
+
+## Step 5: Deploying Fine-tuned Model to Online Endpoint
+if finetuning process succeeds, you are ready to deploy your model to a managed endpoint.
+1. Create online endpoint to host your model:
+``` Python
+endpoint = ManagedOnlineEndpoint(
+    name = endpoint_name,
+    description = f"Online endpoint for {registered_model.name}",
+    auth_mode="key"
+)
+
+workspace_ml_client.begin_create_or_update(endpoint).wait()
+```
+2. Then create a new deployment and allocate traffic to it:
+``` Python
+ft_deployment = ManagedOnlineDeployment(
+    name = "finetunedmodel",
+    endpoint_name = endpoint_name,
+    model = deploy_model.id,
+    instance_type = endpoint_SKU,
+    instance_count = 1,
+    liveness_probe = ProbeSettings(initial_delay=600),
+    request_settings = OnlineRequestSettings(request_timeout_ms=90000),
+)
+
+workspace_ml_client.online_deployments.begin_create_or_update(ft_deployment).wait()
+
+endpoint.traffic = {
+    "finetunedmodel": 100
+}
+
+workspace_ml_client.begin_create_or_update(endpoint).result()
+```
+3. New managed endpoint and deployment will become visible in Azure ML Studio:
+![Step5_Model_Deployment](images/Step5_Model_Deployment.png)
+4. 
