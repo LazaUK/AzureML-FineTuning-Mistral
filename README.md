@@ -9,7 +9,7 @@ This repository documents the process of fine-tuning the Mistral-7B model using 
 - [Prerequisites](#prerequisites)
 - [Step 1: Configuring Environment](#step-1-configuring-environment)
 - [Step 2: Defining Source Model](#step-2-defining-source-model)
-- [Step 3: Preparing Training and Validation Dataset](#step-3-preparing-training-and-validation-dataset)
+- [Step 3: Preparing Training and Validation Datasets](#step-3-preparing-training-and-validation-datasets)
 - [Step 4: Fine-tuning Model](#step-4-fine-tuning-model)
 - [Step 5: Deploying Fine-tuned Model to Online Endpoint](#step-5-deploying-fine-tuned-model-to-online-endpoint)
 
@@ -82,7 +82,7 @@ model_to_finetune = registry_ml_client.models.get(
 model_to_finetune.properties["finetune-recommended-sku"]
 ```
 
-## Step 3: Preparing Training and Validation Dataset
+## Step 3: Preparing Training and Validation Datasets
 Sample training and validation datasets in JSONL format can be downloaded from this repo or the original Microsoft repo, that was referred earlier.
 1. Initialise training dataset. The below code will create a new dataset from the local file, if it already doesn't exist in Azure ML workspace:
 ``` Python
