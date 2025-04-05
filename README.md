@@ -216,16 +216,16 @@ response = requests.post(url, json=payload, headers=headers)
 ```
 5. Your fine-tuned Mistral model should respond now in your customised format:
 ``` JSON
-# Test deployed model
-headers = {"Content-Type": "application/json", "Authorization": ("Bearer "+ auth_key)}
-url = scoring_uri.replace("/score", "/completions")
-prompt = "Summarize the dialog.\n<dialog>: Edward: Rachel, at what time is the meeting..\r\nRachel: At 2pm..\r\nEdward: Ok, see you then\n<summary>: "
-payload = {
-    "prompt": prompt,
-    "temperature": 0,
-    "max_tokens": 200,
-}
-response = requests.post(url, json=payload, headers=headers)
+----------------
+Prompt used: Summarize the dialog.
+<dialog>: Edward: Rachel, at what time is the meeting..
+Rachel: At 2pm..
+Edward: Ok, see you then
+<summary>: 
 
-print(f"Response: {response.json()}")
+Model's response: д Edward and Rachel will meet at 2pm.
+----------------
+Prompt token count: 48
+Response token count: 12
+Total token count: 60
 ```
