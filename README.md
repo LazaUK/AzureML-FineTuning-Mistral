@@ -152,7 +152,7 @@ created_job = workspace_ml_client.jobs.create_or_update(finetuning_job)
 workspace_ml_client.jobs.get(created_job.name)
 ```
 3. Job execution's progress can be checked in Azure ML studio:
-![Step4_Job_Execution](images/Step3_Job_Execution.png)
+![Step4_Job_Execution](images/Step4_Job_Execution.png)
 4. Alternatively, you can poll the job status programmatically:
 ``` Python
 status = workspace_ml_client.jobs.get(created_job.name).status
