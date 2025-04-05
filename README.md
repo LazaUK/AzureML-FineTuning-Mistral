@@ -124,3 +124,46 @@ except:
 ```
 3. You can verify existence of these datasets in Azure ML studio:
 ![Step3_Datasets](images/Step3_Datasets.png)
+
+## Step 4: Fine-tuning Model
+1. Define your finetuning job:
+``` Python
+finetuning_job = create_finetuning_job(
+    name = f"{job_name}-{guid}",
+    display_name = f"{job_name}-{guid}",
+    experiment_name = f"Finetuning-{model_name}",
+    model = model_to_finetune.id,
+    task = FineTuningTaskType.TEXT_COMPLETION,
+    training_data = train_data_asset.id,
+    validation_data = val_data_asset.id,
+    output_model_name_prefix = f"{model_name}-finetuned-{guid}",
+    compute = job_compute,
+    # instance_types = ["Standard_ND96amsr_A100_v4", "Standard_E4s_v3"],
+    hyperparameters = {
+        "per_device_train_batch_size": "1",
+        "learning_rate": "0.00002",
+        "num_train_epochs": "1",
+    },
+)
+```
+2. Then execute your job in your target Azure ML workspace:
+``` Python
+created_job = workspace_ml_client.jobs.create_or_update(finetuning_job)
+workspace_ml_client.jobs.get(created_job.name)
+```
+3. Job execution's progress can be checked in Azure ML studio:
+![Step4_Job_Execution](images/Step3_Job_Execution.png)
+4. Alternatively, you can poll the job status programmatically:
+``` Python
+status = workspace_ml_client.jobs.get(created_job.name).status
+
+while True:
+    status = workspace_ml_client.jobs.get(created_job.name).status
+    
+    if status in ["Failed", "Completed", "Canceled"]:
+        print("Job has finished with status: {0}".format(status))
+        break
+    else:
+        print("Job run is in progress. Checking again in 30 seconds..")
+        time.sleep(30)
+```
