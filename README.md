@@ -17,8 +17,8 @@ This repository documents the process of fine-tuning the Mistral-7B model using 
 Before you begin, ensure you have the following prerequisites in place:
 1. **Azure Subscription:** If you don't have one, you can create a free account.
 2. **Azure Machine Learning Workspace:** Ensure you have the necessary permissions to create resources within the Azure ML workspace.
-3. **Compute Cluster with GPU SKUs:** in [Azure ML Studio](https://ml.azure.com), create a compute cluster with GPU SKUs suitable for fine-tuning the Mistral-7B model. Please, refer to the Azure ML documentation for recommended GPU types and sizes.
-4. **Managed Identity:** During setup of compute cluster, assign a managed identity (MI) to it as shown below. This MI should be also assigned *Storage Blob Data Contributor* and *Storage File Data Privileged Contributor* to Azure Storage account, that will host training and validation datasets.
+3. **Compute Cluster with GPU SKUs:** in the [Azure ML Studio](https://ml.azure.com), create a compute cluster with GPU SKUs suitable for fine-tuning the Mistral-7B model. Refer to the Azure ML documentation for recommended GPU types and sizes.
+4. **Managed Identity:** During setup of compute cluster, assign a managed identity (MI) to it as shown below. This MI should also be assigned the *Storage Blob Data Contributor* and *Storage File Data Privileged Contributor* roles to the Azure Storage account, that will host training and validation datasets.
 ![Step0_Identity_Compute](images/Step0_Compute_Identity.png)
 5. **Python Packages:** Install the required Python packages:
 ```powershell
@@ -122,7 +122,7 @@ except:
     )
     val_data_asset = workspace_ml_client.data.create_or_update(val_data)
 ```
-3. You can verify existence of these datasets in Azure ML studio:
+3. You can verify the existence of these datasets in the *Datasets* section of the Azure ML studio:
 ![Step3_Datasets](images/Step3_Datasets.png)
 
 ## Step 4: Fine-tuning Model
