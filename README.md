@@ -200,6 +200,32 @@ endpoint.traffic = {
 
 workspace_ml_client.begin_create_or_update(endpoint).result()
 ```
-3. New managed endpoint and deployment will become visible in Azure ML Studio:
+3. New managed endpoint and deployment will become visible in Azure ML studio:
 ![Step5_Model_Deployment](images/Step5_Model_Deployment.png)
-4. 
+4. You can test now your model's deployment from your application:
+``` Python
+headers = {"Content-Type": "application/json", "Authorization": ("Bearer "+ auth_key)}
+url = scoring_uri.replace("/score", "/completions")
+prompt = <YOUR_PROMPT>
+payload = {
+    "prompt": prompt,
+    "temperature": 0,
+    "max_tokens": 200,
+}
+response = requests.post(url, json=payload, headers=headers)
+```
+5. Your fine-tuned Mistral model should respond now in your customised format:
+``` JSON
+# Test deployed model
+headers = {"Content-Type": "application/json", "Authorization": ("Bearer "+ auth_key)}
+url = scoring_uri.replace("/score", "/completions")
+prompt = "Summarize the dialog.\n<dialog>: Edward: Rachel, at what time is the meeting..\r\nRachel: At 2pm..\r\nEdward: Ok, see you then\n<summary>: "
+payload = {
+    "prompt": prompt,
+    "temperature": 0,
+    "max_tokens": 200,
+}
+response = requests.post(url, json=payload, headers=headers)
+
+print(f"Response: {response.json()}")
+```
