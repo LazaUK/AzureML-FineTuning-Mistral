@@ -214,7 +214,7 @@ payload = {
 }
 response = requests.post(url, json=payload, headers=headers)
 ```
-5. Your fine-tuned Mistral model should respond now in your customised format:
+5. Your fine-tuned Mistral model should respond now in your customised format, to summarise given dialogs:
 ``` JSON
 ----------------
 Prompt used: Summarize the dialog.
