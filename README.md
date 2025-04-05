@@ -6,7 +6,6 @@ This repository documents the process of fine-tuning the Mistral-7B model using 
 > The Python code and training datasets in this repo are adapted from Microsoft's [Azure Machine Learning examples](https://github.com/Azure/azureml-examples/tree/main/sdk/python/jobs/finetuning) repo.
 
 ## Table of Contents
-
 - [Prerequisites](#prerequisites)
 - [Step 1: Configuring Environment](#step-1-configuring-environment)
 - [Step 2: Defining Source Model](#step-2-defining-source-model)
@@ -15,7 +14,6 @@ This repository documents the process of fine-tuning the Mistral-7B model using 
 - [Step 5: Deploying Fine-tuned Model to Online Endpoint](#step-5-deploying-fine-tuned-model-to-online-endpoint)
 
 ## Prerequisites
-
 Before you begin, ensure you have the following prerequisites in place:
 1. **Azure Subscription:** If you don't have one, you can create a free account.
 2. **Azure Machine Learning Workspace:** Ensure you have the necessary permissions to create resources within the Azure ML workspace.
@@ -28,26 +26,25 @@ pip install azure-ai-ml azure-identity mlflow azureml-mlflow
 ```
 
 ## Step 1: Configuring Environment
-
-1. Set up your environment variables to make provided Jupyter notebook work.
+1. Set up your environment variables to make provided Jupyter notebook work:
 
 | Variable                  | Description                                      |
 | ------------------------- | ------------------------------------------------ |
-| `subscription_id`         | Azure subscription ID.                          |
-| `resource_group`          | Azure ML resource group name.                     |
+| `subscription_id`         | Azure subscription ID.                           |
+| `resource_group`          | Azure ML resource group name.                    |
 | `workspace_name`          | Azure ML workspace name.                         |
 | `model_registry`          | Azure ML model registry name.                    |
-| `model_name`              | Name of the model (e.g., `mistral-7b`).           |
-| `training_dataset_name`   | Name of training dataset in Azure ML datastore. |
-| `training_dataset_file`   | Filename of training dataset. |
+| `model_name`              | Name of the model (e.g., `mistral-7b`).          |
+| `training_dataset_name`   | Name of training dataset in Azure ML datastore.  |
+| `training_dataset_file`   | Filename of training dataset.                    |
 | `validation_dataset_name` | Name of validation dataset in Azure ML datastore.|
-| `validation_dataset_file` | Filename of validation dataset. |
-| `dataset_version`         | Version of the dataset.                            |
-| `job_name`                | Name of the fine-tuning job.                        |
+| `validation_dataset_file` | Filename of validation dataset.                  |
+| `dataset_version`         | Version of the dataset.                          |
+| `job_name`                | Name of the fine-tuning job.                     |
 | `job_compute`             | Name of the compute cluster for the job.         |
-| `endpoint_name`           | Name of the online endpoint.                           |
+| `endpoint_name`           | Name of the online endpoint.                     |
 | `endpoint_SKU`            | SKU for the online endpoint deployment.          |
-| `guid`                    | Unique identifier. |
+| `guid`                    | Unique identifier.                               |
 
 2. Authenticate to your Azure environment:
 ``` Python
@@ -71,4 +68,59 @@ registry_ml_client = MLClient(
     registry_name = model_registry
 )
 ```
-4. 
+
+## Step 2: Defining Source Model
+1. Retrieve your Mistral-7B from the model registry:
+``` Python
+model_to_finetune = registry_ml_client.models.get(
+    name = model_name,
+    label = "latest"
+)
+```
+2. You can now double check which GPU-based compute SKUs are supported by this model:
+``` Python
+model_to_finetune.properties["finetune-recommended-sku"]
+```
+
+## Step 3: Preparing Training and Validation Dataset
+Sample training and validation datasets in JSONL format can be downloaded from this repo or the original Microsoft repo, that was referred earlier.
+1. Initialise training dataset. The below code will create a new dataset from the local file, if it already doesn't exist in Azure ML workspace:
+``` Python
+try:
+    train_data_asset = workspace_ml_client.data.get(
+        name = training_dataset_name,
+        version = dataset_version
+    )
+    print(f"Dataset {training_dataset_name} already exists! Will re-use it.")
+except:
+    print("Creating dataset..\n")
+    train_data = Data(
+        path = f"./{training_dataset_file}",
+        type = AssetTypes.URI_FILE,
+        description = "Training dataset",
+        name = training_dataset_name,
+        version = dataset_version
+    )
+    train_data_asset = workspace_ml_client.data.create_or_update(train_data)
+```
+2. You can repeat the same process to initialise validation dataset:
+``` Python
+try:
+    val_data_asset = workspace_ml_client.data.get(
+        name = validation_dataset_name,
+        version = dataset_version
+    )
+    print(f"Dataset {validation_dataset_name} already exists! Will re-use it.")
+except:
+    print("Creating dataset..\n")
+    val_data = Data(
+        path = f"./{validation_dataset_file}",
+        type = AssetTypes.URI_FILE,
+        description = "Validation dataset",
+        name = validation_dataset_name,
+        version = dataset_version
+    )
+    val_data_asset = workspace_ml_client.data.create_or_update(val_data)
+```
+3. You can verify existence of these datasets in Azure ML studio:
+![Step3_Datasets](images/Step3_Datasets.png)
