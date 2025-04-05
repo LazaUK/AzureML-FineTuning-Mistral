@@ -169,7 +169,7 @@ while True:
 ```
 
 ## Step 5: Deploying Fine-tuned Model to Online Endpoint
-if finetuning process succeeds, you are ready to deploy your model to a managed endpoint.
+If finetuning process succeeded, you are now ready to deploy your model to a managed online endpoint.
 1. Create online endpoint to host your model:
 ``` Python
 endpoint = ManagedOnlineEndpoint(
