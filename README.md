@@ -223,7 +223,7 @@ Rachel: At 2pm..
 Edward: Ok, see you then
 <summary>: 
 
-Model's response: д Edward and Rachel will meet at 2pm.
+Model's response: Edward and Rachel will meet at 2pm.
 ----------------
 Prompt token count: 48
 Response token count: 12
