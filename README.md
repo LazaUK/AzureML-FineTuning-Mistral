@@ -15,7 +15,7 @@ This repository documents the process of fine-tuning the Mistral-7B model using 
 
 ## Prerequisites
 Before you begin, ensure you have the following prerequisites in place:
-1. **Azure Subscription:** If you don't have one, you can create a free account.
+1. **Azure Subscription:** If you don't have one, you can create a free account. For details, please [see](https://azure.microsoft.com/en-gb/pricing/purchase-options/azure-account/search).
 2. **Azure Machine Learning Workspace:** Ensure you have the necessary permissions to create resources within the Azure ML workspace.
 3. **Compute Cluster with GPU SKUs:** in the [Azure ML Studio](https://ml.azure.com), create a compute cluster with GPU SKUs suitable for fine-tuning the Mistral-7B model. Refer to the model card in the Azure ML model catalog for recommended GPU types (or check later in provided Python code).
 4. **Managed Identity:** During setup of compute cluster, assign a managed identity (MI) to it as shown below. This MI should also be assigned the *Storage Blob Data Contributor* and *Storage File Data Privileged Contributor* roles to the Azure Storage account, that will host training and validation datasets.
